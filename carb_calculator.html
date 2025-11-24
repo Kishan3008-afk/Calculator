@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbohydrate Calculator - Optimize Your Daily Intake</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #27ae60;
+            --success-hover: #229954;
+            --info: #3498db;
+            --warning: #ffc107;
+            --danger: #e74c3c;
+            --light: #f8f9fa;
+            --lighter: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 12px;
+            padding: 50px 40px;
+            margin-bottom: 50px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculator-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: var(--dark);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--lighter);
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="number"],
+        select {
+            padding: 12px;
+            border: 2px solid var(--lighter);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="radio"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .radio-item label {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .settings {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 6px;
+            border-left: 4px solid var(--info);
+        }
+
+        .settings-toggle {
+            color: var(--info);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            user-select: none;
+        }
+
+        .settings-content {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .settings-content.show {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        button[type="submit"],
+        button[type="button"] {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-hover) 100%);
+            color: white;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .clear-btn {
+            background: var(--lighter);
+            color: var(--dark);
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .clear-btn:hover {
+            background: var(--gray);
+            color: white;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #f5e6ff 100%);
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: var(--dark);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .result-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--success);
+            margin: 15px 0;
+        }
+
+        .result-unit {
+            color: var(--gray);
+            font-size: 18px;
+        }
+
+        .result-breakdown {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #d0e8f2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .breakdown-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid var(--info);
+        }
+
+        .breakdown-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .exercise-guide {
+            background: #fff3cd;
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #856404;
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+
+        .exercise-guide strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .error {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 10px;
+            padding: 12px;
+            background: #ffe6e6;
+            border-radius: 6px;
+            border-left: 4px solid var(--danger);
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .benefits-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .benefit-card {
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f8ff 100%);
+            border-radius: 8px;
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .benefit-card h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .benefit-card p {
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .faq-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--lighter);
+            padding-bottom: 20px;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.8;
+            display: none;
+        }
+
+        .faq-answer.show {
+            display: block;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            margin-top: 15px;
+        }
+
+        .footer-links a {
+            color: var(--info);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 28px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .hero {
+                padding: 30px 20px;
+            }
+
+            .calculator-section {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                min-width: unset;
+            }
+
+            .result-value {
+                font-size: 36px;
+            }
+
+            .result-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🥗 Carbohydrate Calculator</h1>
+        <p>Optimize Your Daily Carbohydrate Intake Based on Your Lifestyle</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a onclick="scrollToSection('calculator')">Calculator</a></li>
+            <li><a onclick="scrollToSection('benefits')">Benefits</a></li>
+            <li><a onclick="scrollToSection('faq')">FAQ</a></li>
+            <li><a onclick="scrollToSection('about')">About</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Personalized Carb Recommendations</h2>
+            <p>Calculate your ideal daily carbohydrate intake based on your age, gender, weight, height, and activity level. Our calculator uses proven nutritional science to provide accurate recommendations tailored to your fitness goals.</p>
+            <button class="cta-button" onclick="scrollToSection('calculator')">Get Started</button>
+        </section>
+
+        <section class="calculator-section" id="calculator">
+            <h2 class="section-title">Calculate Your Needs</h2>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab(0)">US Units</button>
+                <button class="tab-btn" onclick="switchTab(1)">Metric Units</button>
+            </div>
+
+            <div class="tab-content active" id="tab-0">
+                <form onsubmit="calculateCarbs(event, 'us')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="age-us">Age</label>
+                            <input type="number" id="age-us" min="18" max="80" value="25" required>
+                            <span class="info-text">Ages 18 - 80</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="male-us" name="gender-us" value="male" checked>
+                                    <label for="male-us">Male</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="female-us" name="gender-us" value="female">
+                                    <label for="female-us">Female</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height-us">Height</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <input type="number" id="height-us" step="0.1" value="5" required>
+                                    <span class="info-text">Feet</span>
+                                </div>
+                                <div>
+                                    <input type="number" id="height-us-inches" step="0.1" value="11" required>
+                                    <span class="info-text">Inches</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight-us">Weight</label>
+                            <input type="number" id="weight-us" step="0.1" value="132" required>
+                            <span class="info-text">in pounds (lbs)</span>
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="activity-us">Activity Level</label>
+                            <select id="activity-us" required>
+                                <option value="1.2">Sedentary: little or no exercise</option>
+                                <option value="1.375">Light: exercise 1-3 times/week</option>
+                                <option value="1.55">Moderate: exercise 3-5 times/week</option>
+                                <option value="1.725">Very Active: exercise 6-7 times/week</option>
+                                <option value="1.9">Extremely Active: physical job or training</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings">
+                        <a class="settings-toggle" onclick="toggleSettings(0)">⚙️ Settings</a>
+                        <div class="settings-content" id="settings-0">
+                            <div class="form-group">
+                                <label for="carb-percentage-us">Carbohydrate Percentage (%)</label>
+                                <input type="number" id="carb-percentage-us" min="30" max="70" value="50" step="5">
+                                <p class="info-text">Recommended: 45-65% of daily calories</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="calculate-btn">📊 Calculate</button>
+                        <button type="button" class="clear-btn" onclick="clearForm('us')">Clear</button>
+                    </div>
+
+                    <div class="error" id="error-us"></div>
+                </form>
+            </div>
+
+            <div class="tab-content" id="tab-1">
+                <form onsubmit="calculateCarbs(event, 'metric')">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="age-metric">Age</label>
+                            <input type="number" id="age-metric" min="18" max="80" value="25" required>
+                            <span class="info-text">Ages 18 - 80</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" id="male-metric" name="gender-metric" value="male" checked>
+                                    <label for="male-metric">Male</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" id="female-metric" name="gender-metric" value="female">
+                                    <label for="female-metric">Female</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height-metric">Height</label>
+                            <input type="number" id="height-metric" value="180" required>
+                            <span class="info-text">in centimeters (cm)</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight-metric">Weight</label>
+                            <input type="number" id="weight-metric" step="0.1" value="60" required>
+                            <span class="info-text">in kilograms (kg)</span>
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="activity-metric">Activity Level</label>
+                            <select id="activity-metric" required>
+                                <option value="1.2">Sedentary: little or no exercise</option>
+                                <option value="1.375">Light: exercise 1-3 times/week</option>
+                                <option value="1.55">Moderate: exercise 3-5 times/week</option>
+                                <option value="1.725">Very Active: exercise 6-7 times/week</option>
+                                <option value="1.9">Extremely Active: physical job or training</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings">
+                        <a class="settings-toggle" onclick="toggleSettings(1)">⚙️ Settings</a>
+                        <div class="settings-content" id="settings-1">
+                            <div class="form-group">
+                                <label for="carb-percentage-metric">Carbohydrate Percentage (%)</label>
+                                <input type="number" id="carb-percentage-metric" min="30" max="70" value="50" step="5">
+                                <p class="info-text">Recommended: 45-65% of daily calories</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="calculate-btn">📊 Calculate</button>
+                        <button type="button" class="clear-btn" onclick="clearForm('metric')">Clear</button>
+                    </div>
+
+                    <div class="error" id="error-metric"></div>
+                </form>
+            </div>
+
+            <div class="result" id="result">
+                <div class="result-title">📋 Your Daily Carbohydrate Recommendation</div>
+                <div class="result-value"><span id="carb-value">0</span><span class="result-unit"> grams</span></div>
+                <div class="result-breakdown">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Daily Caloric Need</div>
+                        <div class="breakdown-value"><span id="calorie-value">0</span> cal</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Carbohydrate Percentage</div>
+                        <div class="breakdown-value"><span id="percentage-value">50</span>%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Calories from Carbs</div>
+                        <div class="breakdown-value"><span id="carb-calories">0</span> cal</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Carbs per Pound/kg</div>
+                        <div class="breakdown-value"><span id="per-weight">0</span> g</div>
+                    </div>
+                </div>
+                <div class="exercise-guide">
+                    <strong>💪 Exercise Guidelines:</strong>
+                    <div>• <strong>Light:</strong> 15-30 minutes of elevated heart rate activity.</div>
+                    <div>• <strong>Moderate:</strong> 45-120 minutes of elevated heart rate activity.</div>
+                    <div>• <strong>Very Intense:</strong> 2+ hours of elevated heart rate activity.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="benefits-section" id="benefits">
+            <h2 class="section-title">Why Track Carbohydrates?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Energy Management</h3>
+                    <p>Carbohydrates are your body's primary energy source. Proper intake ensures optimal performance throughout your day.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💪</div>
+                    <h3>Athletic Performance</h3>
+                    <p>The right carb intake fuels your workouts and supports muscle recovery for better athletic results.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🧠</div>
+                    <h3>Mental Clarity</h3>
+                    <p>Your brain relies on glucose from carbs. Balanced intake supports focus and cognitive function.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚖️</div>
+                    <h3>Weight Management</h3>
+                    <p>Understanding your carb needs helps you make informed nutritional decisions aligned with your goals.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">❤️</div>
+                    <h3>Health Optimization</h3>
+                    <p>Personalized carb intake supports overall metabolic health and wellbeing.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <h3>Goal Achievement</h3>
+                    <p>Whether building muscle or losing fat, proper carb intake is crucial to your fitness goals.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section" id="faq">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">❓ How accurate is this calculator?</div>
+                <div class="faq-answer">This calculator uses the Mifflin-St Jeor equation, which is a scientifically validated method for estimating metabolic rate. Results are estimates and may vary based on individual metabolism, fitness level, and other factors. Consult a nutritionist for personalized dietary advice.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">❓ What if my results seem too high or too low?</div>
+                <div class="faq-answer">Individual needs vary greatly. Factors like muscle mass, metabolism, genetics, and specific fitness goals can affect actual requirements. Start with these recommendations and adjust based on your results and how you feel.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">❓ Is 50% carbs always ideal?</div>
+                <div class="faq-answer">No. The recommended range is 45-65% depending on your goals. Endurance athletes may benefit from higher intake (55-65%), while some prefer lower percentages (40-45%). Use our settings to experiment with different percentages.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">❓ How do I apply these results?</div>
+                <div class="faq-answer">Use the recommended grams as your daily target. Focus on complex carbs like whole grains, legumes, and vegetables. Time your carb intake around workouts for optimal performance and recovery.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">❓ Should I adjust intake on rest days?</div>
+                <div class="faq-answer">Yes, many people reduce carbs on rest days or non-training days since energy demands are lower. You might use our calculator to estimate needs for both activity levels.</div>
+            </div>
+        </section>
+
+        <section class="benefits-section" id="about">
+            <h2 class="section-title">About This Calculator</h2>
+            <p style="font-size: 16px; line-height: 1.8; color: var(--gray);">
+                This Carbohydrate Calculator is designed to provide personalized nutrition recommendations based on the Mifflin-St Jeor equation, one of the most accurate methods for estimating basal metabolic rate. The calculator takes into account your age, gender, height, weight, and activity level to estimate your daily caloric needs and recommend an appropriate carbohydrate intake.
+            </p>
+            <p style="font-size: 16px; line-height: 1.8; color: var(--gray); margin-top: 15px;">
+                While this calculator provides helpful estimates, it's important to remember that nutrition is highly individual. Factors such as metabolism, muscle mass, digestive efficiency, and personal fitness goals can all influence your actual carbohydrate needs. We recommend using these results as a starting point and adjusting based on your personal experience and results.
+            </p>
+            <p style="font-size: 16px; line-height: 1.8; color: var(--gray); margin-top: 15px;">
+                Always consult with a healthcare professional, registered dietitian, or certified nutritionist before making significant changes to your diet. This calculator is for informational purposes only and should not be considered as medical or nutritional advice.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Carbohydrate Calculator. All rights reserved.</p>
+        <p>Powered by Science-Based Nutrition | Mifflin-St Jeor Equation</p>
+        <div class="footer-links">
+            <a onclick="alert('Privacy Policy: Your data is not stored or transmitted.')">Privacy Policy</a>
+            <a onclick="alert('Terms of Service: This calculator is for educational purposes only.')">Terms of Service</a>
+            <a onclick="alert('Contact us at: info@carbcalculator.com')">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const btns = document.querySelectorAll('.tab-btn');
+
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            btns.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            document.getElementById('result').classList.remove('show');
+        }
+
+        function toggleSettings(index) {
+            const settings = document.getElementById(`settings-${index}`);
+            if (settings) {
+                settings.classList.toggle('show');
+            }
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function calculateCarbs(event, system) {
+            event.preventDefault();
+
+            const errorEl = document.getElementById(`error-${system}`);
+            errorEl.classList.remove('show');
+
+            let weight, height, age, gender, activity, carbPercentage;
+
+            if (system === 'us') {
+                age = parseInt(document.getElementById('age-us').value);
+                gender = document.querySelector('input[name="gender-us"]:checked').value;
+                const feet = parseFloat(document.getElementById('height-us').value);
+                const inches = parseFloat(document.getElementById('height-us-inches').value);
+                const totalInches = feet * 12 + inches;
+                height = totalInches * 2.54;
+                weight = parseFloat(document.getElementById('weight-us').value) * 0.453592;
+                activity = parseFloat(document.getElementById('activity-us').value);
+                carbPercentage = parseInt(document.getElementById('carb-percentage-us').value);
+            } else {
+                age = parseInt(document.getElementById('age-metric').value);
+                gender = document.querySelector('input[name="gender-metric"]:checked').value;
+                height = parseFloat(document.getElementById('height-metric').value);
+                weight = parseFloat(document.getElementById('weight-metric').value);
+                activity = parseFloat(document.getElementById('activity-metric').value);
+                carbPercentage = parseInt(document.getElementById('carb-percentage-metric').value);
+            }
+
+            if (age < 18 || age > 80 || weight <= 0 || height <= 0) {
+                errorEl.textContent = 'Please enter valid values. Age should be 18-80, and weight/height must be positive.';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            let bmr;
+            if (gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+
+            const tdee = Math.round(bmr * activity);
+            const carbCalories = (tdee * carbPercentage) / 100;
+            const carbGrams = Math.round(carbCalories / 4);
+
+            const weightInPounds = weight / 0.453592;
+            const carbsPerPound = (carbGrams / weightInPounds).toFixed(2);
+
+            document.getElementById('carb-value').textContent = carbGrams;
+            document.getElementById('calorie-value').textContent = tdee.toLocaleString();
+            document.getElementById('percentage-value').textContent = carbPercentage;
+            document.getElementById('carb-calories').textContent = Math.round(carbCalories).toLocaleString();
+            document.getElementById('per-weight').textContent = carbsPerPound;
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        function clearForm(system) {
+            const tabIndex = system === 'us' ? 0 : 1;
+            const form = document.querySelector(`#tab-${tabIndex} form`);
+            
+            if (form) {
+                form.reset();
+            }
+
+            document.getElementById('result').classList.remove('show');
+
+            if (system === 'us') {
+                document.getElementById('age-us').value = '25';
+                document.getElementById('height-us').value = '5';
+                document.getElementById('height-us-inches').value = '11';
+                document.getElementById('weight-us').value = '132';
+                document.getElementById('carb-percentage-us').value = '50';
+            } else {
+                document.getElementById('age-metric').value = '25';
+                document.getElementById('height-metric').value = '180';
+                document.getElementById('weight-metric').value = '60';
+                document.getElementById('carb-percentage-metric').value = '50';
+            }
+        }
+
+        function toggleFaq(element) {
+            const answer = element.nextElementSibling;
+            if (answer) {
+                answer.classList.toggle('show');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calories Burned Calculator - Track Your Fitness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 50px;
+            color: #333;
+        }
+
+        .calculator-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .calc-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .calc-box h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-row input {
+            width: 100%;
+        }
+
+        .unit-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            border-left: 4px solid #667eea;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .result-unit {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .distance-row {
+            display: none;
+        }
+
+        .distance-row.show {
+            display: block;
+        }
+
+        /* Info Section */
+        .info-section {
+            padding: 60px 20px;
+            background: white;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border-top: 4px solid #667eea;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .info-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Activity List */
+        .activities-section {
+            padding: 60px 20px;
+            background: #f8f9fa;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .activity-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, cursor 0.3s;
+            cursor: pointer;
+        }
+
+        .activity-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .activity-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .activity-item h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .activity-item p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .calculator-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .calc-box {
+                padding: 25px;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">🔥 CalorieTracker</div>
+            <ul class="nav-links">
+                <li><a href="#calculator">Calculator</a></li>
+                <li><a href="#activities">Activities</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Track Your Calories Burned</h1>
+            <p>Estimate the number of calories you burn during your favorite activities. Monitor your fitness progress and achieve your health goals.</p>
+        </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section" id="calculator">
+        <div class="container">
+            <h2 class="section-title">Calories Burned Calculator</h2>
+            
+            <div class="calculator-wrapper">
+                <!-- Duration Calculator -->
+                <div class="calc-box">
+                    <h2>By Duration</h2>
+                    
+                    <div class="form-group">
+                        <label for="activity1">Select Activity</label>
+                        <select id="activity1">
+                            <option value="">-- Select One --</option>
+                            <option value="walking">Walking (3 mph)</option>
+                            <option value="running">Running (6 mph)</option>
+                            <option value="cycling">Cycling (10 mph)</option>
+                            <option value="swimming">Swimming</option>
+                            <option value="dancing">Dancing</option>
+                            <option value="yoga">Yoga</option>
+                            <option value="gym">Gym Workout</option>
+                            <option value="hiking">Hiking</option>
+                            <option value="tennis">Tennis</option>
+                            <option value="basketball">Basketball</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <div class="input-row">
+                            <div>
+                                <input type="number" id="hours1" min="0" max="24" value="1" placeholder="Hours">
+                                <div class="unit-label">Hours</div>
+                            </div>
+                            <div>
+                                <input type="number" id="minutes1" min="0" max="59" value="0" placeholder="Minutes">
+                                <div class="unit-label">Minutes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight1">Body Weight</label>
+                        <div class="input-row">
+                            <input type="number" id="weight1" min="20" max="300" value="70" placeholder="Weight">
+                            <select id="weightUnit1">
+                                <option value="kg">Kilograms</option>
+                                <option value="lbs">Pounds</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-calculate" onclick="calculateByDuration()">Calculate</button>
+                        <button class="btn-clear" onclick="clearDuration()">Clear</button>
+                    </div>
+
+                    <div class="result" id="result1">
+                        <div class="result-label">Calories Burned</div>
+                        <div class="result-value" id="calorieValue1">0</div>
+                        <div class="result-unit">kcal</div>
+                    </div>
+                </div>
+
+                <!-- Distance Calculator -->
+                <div class="calc-box">
+                    <h2>By Distance</h2>
+                    
+                    <div class="form-group">
+                        <label for="activity2">Select Activity</label>
+                        <select id="activity2">
+                            <option value="">-- Select One --</option>
+                            <option value="walking">Walking</option>
+                            <option value="running">Running</option>
+                            <option value="cycling">Cycling</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="distance">Distance</label>
+                        <input type="number" id="distance" min="0" step="0.1" value="5" placeholder="Enter distance">
+                        <div class="unit-label">kilometers</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight2">Body Weight</label>
+                        <div class="input-row">
+                            <input type="number" id="weight2" min="20" max="300" value="70" placeholder="Weight">
+                            <select id="weightUnit2">
+                                <option value="kg">Kilograms</option>
+                                <option value="lbs">Pounds</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-calculate" onclick="calculateByDistance()">Calculate</button>
+                        <button class="btn-clear" onclick="clearDistance()">Clear</button>
+                    </div>
+
+                    <div class="result" id="result2">
+                        <div class="result-label">Calories Burned</div>
+                        <div class="result-value" id="calorieValue2">0</div>
+                        <div class="result-unit">kcal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activities Section -->
+    <section class="activities-section" id="activities">
+        <div class="container">
+            <h2 class="section-title">Popular Activities</h2>
+            
+            <div class="activity-grid">
+                <div class="activity-item" onclick="selectActivity('walking')">
+                    <div class="activity-icon">🚶</div>
+                    <h4>Walking</h4>
+                    <p>Light cardio activity suitable for all fitness levels</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('running')">
+                    <div class="activity-icon">🏃</div>
+                    <h4>Running</h4>
+                    <p>High-intensity cardio for maximum calorie burn</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('cycling')">
+                    <div class="activity-icon">🚴</div>
+                    <h4>Cycling</h4>
+                    <p>Low-impact exercise that builds leg strength</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('swimming')">
+                    <div class="activity-icon">🏊</div>
+                    <h4>Swimming</h4>
+                    <p>Full-body workout with minimal joint stress</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('dancing')">
+                    <div class="activity-icon">💃</div>
+                    <h4>Dancing</h4>
+                    <p>Fun cardio activity that improves coordination</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('yoga')">
+                    <div class="activity-icon">🧘</div>
+                    <h4>Yoga</h4>
+                    <p>Flexibility and strength training combined</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('gym')">
+                    <div class="activity-icon">🏋️</div>
+                    <h4>Gym Workout</h4>
+                    <p>Structured strength and conditioning training</p>
+                </div>
+                <div class="activity-item" onclick="selectActivity('hiking')">
+                    <div class="activity-icon">🥾</div>
+                    <h4>Hiking</h4>
+                    <p>Outdoor adventure with significant calorie burn</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section" id="about">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>📊 MET Formula</h3>
+                    <p>We use the Metabolic Equivalent (MET) formula which calculates: Calories = MET × Weight × Time. This provides accurate estimates based on scientific research.</p>
+                </div>
+                <div class="info-card">
+                    <h3>⚖️ Weight Matters</h3>
+                    <p>Heavier bodies burn more calories during the same activity. Your weight is a crucial factor in calculating accurate calorie expenditure.</p>
+                </div>
+                <div class="info-card">
+                    <h3>⏱️ Time & Distance</h3>
+                    <p>Calculate calories burned either by duration or distance. Choose the method that best suits your activity tracking preference.</p>
+                </div>
+                <div class="info-card">
+                    <h3>📈 Track Progress</h3>
+                    <p>Use this calculator regularly to monitor your fitness progress and adjust your exercise routine to meet your health goals.</p>
+                </div>
+                <div class="info-card">
+                    <h3>💪 Multiple Activities</h3>
+                    <p>Supports various activities from light yoga to intense running. Each activity has different calorie burn rates.</p>
+                </div>
+                <div class="info-card">
+                    <h3>🎯 Personalized Results</h3>
+                    <p>Results are personalized based on your weight, activity type, and duration, providing realistic calorie burn estimates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Calories Burned Calculator. All rights reserved.</p>
+            <p>Disclaimer: Results are estimates. Consult a fitness professional for personalized advice.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const metValues = {
+            walking: 3.5,
+            running: 9.8,
+            cycling: 7.5,
+            swimming: 8.0,
+            dancing: 6.0,
+            yoga: 2.5,
+            gym: 6.5,
+            hiking: 6.5,
+            tennis: 7.3,
+            basketball: 8.0
+        };
+
+        const caloriesPerKm = {
+            walking: 0.8,
+            running: 1.6,
+            cycling: 0.9
+        };
+
+        function calculateByDuration() {
+            const activity = document.getElementById('activity1').value;
+            const hours = parseFloat(document.getElementById('hours1').value) || 0;
+            const minutes = parseFloat(document.getElementById('minutes1').value) || 0;
+            let weight = parseFloat(document.getElementById('weight1').value) || 0;
+            const weightUnit = document.getElementById('weightUnit1').value;
+
+            if (!activity) {
+                alert('Please select an activity');
+                return;
+            }
+
+            if (weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+
+            if (weightUnit === 'lbs') {
+                weight = weight / 2.205;
+            }
+
+            const totalDuration = hours + minutes / 60;
+
+            if (totalDuration <= 0) {
+                alert('Please enter a valid duration');
+                return;
+            }
+
+            const met = metValues[activity];
+            const calories = met * weight * totalDuration;
+
+            document.getElementById('calorieValue1').textContent = Math.round(calories);
+            document.getElementById('result1').classList.add('show');
+        }
+
+        function calculateByDistance() {
+            const activity = document.getElementById('activity2').value;
+            const distance = parseFloat(document.getElementById('distance').value) || 0;
+            let weight = parseFloat(document.getElementById('weight2').value) || 0;
+            const weightUnit = document.getElementById('weightUnit2').value;
+
+            if (!activity) {
+                alert('Please select an activity');
+                return;
+            }
+
+            if (distance <= 0) {
+                alert('Please enter a valid distance');
+                return;
+            }
+
+            if (weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+
+            if (weightUnit === 'lbs') {
+                weight = weight / 2.205;
+            }
+
+            const cpm = caloriesPerKm[activity];
+            const calories = cpm * weight * distance;
+
+            document.getElementById('calorieValue2').textContent = Math.round(calories);
+            document.getElementById('result2').classList.add('show');
+        }
+
+        function clearDuration() {
+            document.getElementById('activity1').value = '';
+            document.getElementById('hours1').value = '1';
+            document.getElementById('minutes1').value = '0';
+            document.getElementById('weight1').value = '70';
+            document.getElementById('weightUnit1').value = 'kg';
+            document.getElementById('result1').classList.remove('show');
+        }
+
+        function clearDistance() {
+            document.getElementById('activity2').value = '';
+            document.getElementById('distance').value = '5';
+            document.getElementById('weight2').value = '70';
+            document.getElementById('weightUnit2').value = 'kg';
+            document.getElementById('result2').classList.remove('show');
+        }
+
+        function selectActivity(activity) {
+            document.getElementById('activity1').value = activity;
+            document.getElementById('activity2').value = activity;
+            
+            // Scroll to calculator section
+            const calculatorSection = document.getElementById('calculator');
+            calculatorSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                if (event.target.closest('.calc-box:has(#activity1)')) {
+                    calculateByDuration();
+                } else if (event.target.closest('.calc-box:has(#activity2)')) {
+                    calculateByDistance();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

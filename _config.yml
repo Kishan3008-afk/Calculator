@@ -1,0 +1,45 @@
+# GitHub Pages Jekyll Configuration
+title: Health & Fitness Calculators
+description: Complete suite of health and fitness calculators - BMI, Body Fat, Calories, Carbs, Protein, and more
+author: Kishan3008-afk
+url: https://kishan3008-afk.github.io/Calculator
+repository: Kishan3008-afk/Calculator
+github_username: Kishan3008-afk
+
+# Build settings
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-seo-tag
+  - jekyll-feed
+
+# Exclude from processing
+exclude:
+  - .gitignore
+  - .git
+  - Gemfile
+  - Gemfile.lock
+
+# Front matter defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# Google Analytics (optional - add your tracking ID)
+# google_analytics: UA-XXXXX-Y
+
+# Social media
+social:
+  twitter: ""
+  github: Kishan3008-afk
+  linkedin: ""
+
+# SEO Tags
+twitter:
+  username: ""
+  card: summary_large_image
+
+# Markdown processor
+markdown: kramdown
+highlighter: rouge

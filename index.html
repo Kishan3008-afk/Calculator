@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health & Fitness Calculators - All-in-One Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 0 40px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 18px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            padding: 50px 0;
+        }
+
+        .calculators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .calculator-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .calculator-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .calculator-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: block;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calculator-card h3 {
+            color: #1e3c72;
+            font-size: 22px;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 12px;
+        }
+
+        .calculator-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .calculator-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .calculator-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(46, 204, 113, 0.3);
+        }
+
+        .features-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .features-section h2 {
+            color: #1e3c72;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 15px;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .feature-text h3 {
+            color: #2a5298;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .feature-text p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #1e3c72;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        footer a {
+            color: #2ecc71;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 36px;
+            }
+
+            .calculators-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+
+            .features-section {
+                padding: 30px 20px;
+            }
+        }
+
+        .github-badge {
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .github-badge a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .github-badge a:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>💪 Health & Fitness Calculators</h1>
+            <p>Your all-in-one suite of health and fitness calculators to help you achieve your wellness goals</p>
+            <div class="github-badge">
+                <a href="https://github.com/Kishan3008-afk/Calculator" target="_blank">
+                    ⭐ View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        <div class="calculators-grid">
+            <!-- BMI Calculator -->
+            <a href="bmi_calculator.html" class="calculator-card">
+                <div class="calculator-icon">📊</div>
+                <h3>BMI Calculator</h3>
+                <p>Calculate your Body Mass Index and understand your health status based on height and weight measurements.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Body Fat Calculator -->
+            <a href="body_fat_calculator.html" class="calculator-card">
+                <div class="calculator-icon">🏋️</div>
+                <h3>Body Fat Calculator</h3>
+                <p>Estimate your body fat percentage using multiple calculation methods for accurate fitness assessment.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Calories Burned Calculator -->
+            <a href="calories_burned_calculator.html" class="calculator-card">
+                <div class="calculator-icon">🔥</div>
+                <h3>Calories Burned</h3>
+                <p>Determine how many calories you burn during various activities and exercises throughout the day.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Carb Calculator -->
+            <a href="carb_calculator.html" class="calculator-card">
+                <div class="calculator-icon">🥗</div>
+                <h3>Carb Calculator</h3>
+                <p>Calculate your daily carbohydrate needs based on your fitness goals and activity level.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Fat Intake Calculator -->
+            <a href="fat_intake_webpage.html" class="calculator-card">
+                <div class="calculator-icon">🍎</div>
+                <h3>Fat Intake Calculator</h3>
+                <p>Determine your daily fat intake requirements based on your dietary preferences and fitness goals.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Ideal Weight Calculator -->
+            <a href="ideal_weight_calculator.html" class="calculator-card">
+                <div class="calculator-icon">⚖️</div>
+                <h3>Ideal Weight Calculator</h3>
+                <p>Calculate your ideal weight range based on your height, age, and body type.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Pace Calculator -->
+            <a href="pace_calculator.html" class="calculator-card">
+                <div class="calculator-icon">🏃</div>
+                <h3>Pace Calculator</h3>
+                <p>Calculate your running or walking pace to track your fitness performance and improvements.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+
+            <!-- Protein Calculator -->
+            <a href="protein calculator_webpage.html" class="calculator-card">
+                <div class="calculator-icon">🥚</div>
+                <h3>Protein Calculator</h3>
+                <p>Calculate your daily protein requirements based on your fitness goals and body composition.</p>
+                <button class="calculator-link">Open Calculator</button>
+            </a>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <h2>✨ Why Use Our Calculators?</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <h3>Fast & Accurate</h3>
+                        <p>Get instant calculations using proven health and fitness formulas.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-text">
+                        <h3>Mobile Friendly</h3>
+                        <p>Use on any device - desktop, tablet, or smartphone.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-text">
+                        <h3>Privacy Protected</h3>
+                        <p>Your data is processed locally - nothing is stored or transmitted.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <div class="feature-text">
+                        <h3>Educational</h3>
+                        <p>Learn about health metrics and how to interpret your results.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-text">
+                        <h3>Beautiful Design</h3>
+                        <p>Intuitive interface with a clean, modern design.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🆓</div>
+                    <div class="feature-text">
+                        <h3>Completely Free</h3>
+                        <p>All calculators are 100% free with no hidden fees or ads.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Health & Fitness Calculators. All rights reserved. | 
+            <a href="https://github.com/Kishan3008-afk/Calculator" target="_blank">GitHub Repository</a></p>
+            <p style="margin-top: 10px; font-size: 12px; opacity: 0.8;">Disclaimer: These calculators are for informational purposes only. Consult a healthcare professional for personalized advice.</p>
+        </div>
+    </footer>
+</body>
+</html>
